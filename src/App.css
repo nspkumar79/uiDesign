@@ -1,38 +1,106 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
-
-.App-link {
-  color: #61dafb;
+.app-responsive-container {
+  width: 80%;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.search-bar {
+  width: 100%;
+  padding: 5px;
+}
+.users-list-container {
+  list-style-type: none;
+  padding-left: 0;
+}
+.list-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.list-header-checkbox {
+  margin-right: 20px;
+}
+.list-header-name {
+  font-size: 24px;
+  width: 20%;
+}
+.list-header-email {
+  font-size: 24px;
+  width: 40%;
+}
+.list-header-role {
+  font-size: 24px;
+  width: 15%;
+}
+.list-header-actions {
+  font-size: 24px;
+  width: 15%;
+}
+.navigation-delete-container {
+  display: flex;
+  align-items: center;
+}
+.delete-select-button-container {
+  width: 40%;
+}
+.delete-select-button {
+  width: 180px;
+  height: 45px;
+  border: none;
+  border-radius: 8px;
+  background-color: rebeccapurple;
+  color: #ffffff;
+  font-size: 20px;
+}
+.navigation-container {
+  display: flex;
+  align-items: center;
+}
+.active-page {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 30px;
+  font-weight: bold;
+}
+.next-page-button {
+  background-color: lightskyblue;
+  border-radius: 50px;
+  margin-right: 20px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+.next-page {
+  font-size: 35px;
+}
+.previous-page-button {
+  background-color: lightskyblue;
+  border-radius: 50px;
+  margin-left: 20px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+.previous-page {
+  font-size: 35px;
+}
+.first-page-button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+.first-page {
+  font-size: 35px;
+}
+.last-page-button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+.last-page {
+  font-size: 35px;
 }
