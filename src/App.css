@@ -21,8 +21,12 @@
   align-items: center;
   justify-content: space-between;
 }
+
 .list-header-checkbox {
   margin-right: 20px;
+}
+.all-select-label {
+  display: none;
 }
 .list-header-name {
   font-size: 24px;
@@ -40,6 +44,7 @@
   font-size: 24px;
   width: 15%;
 }
+
 .navigation-delete-container {
   display: flex;
   align-items: center;

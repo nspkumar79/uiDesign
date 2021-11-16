@@ -162,7 +162,27 @@ class App extends Component {
     );
   };
 
-  editUser = (id) => {};
+  editUser = (editedUser) => {
+    const { usersList, filteredUsersList } = this.state;
+
+    const filteredUserIndex = filteredUsersList.findIndex(
+      (eachItem) => eachItem.id === editedUser.id
+    );
+    filteredUsersList.splice(filteredUserIndex, 1, editedUser);
+
+    const usersListIndex = usersList.findIndex(
+      (eachItem) => eachItem.id === editedUser.id
+    );
+    usersList.splice(usersListIndex, 1, editedUser);
+
+    this.setState(
+      {
+        usersList: usersList,
+        filteredUsersList: filteredUsersList,
+      },
+      this.updateActivePageUsers
+    );
+  };
 
   render() {
     const { activePage, activePageUsers, allSelectCheckbox } = this.state;
@@ -176,16 +196,23 @@ class App extends Component {
             placeholder="Search by name, email or role"
             onChange={this.onChangeSearchInput}
           />
-          {activePageUsers.length > 1 ? (
+          {activePageUsers.length > 0 ? (
             <>
               <ul className="users-list-container">
                 <li className="list-header-container">
                   <input
                     type="checkbox"
+                    id="allSelectCheckbox"
                     className="list-header-checkbox"
                     onChange={this.allCheckboxChanged}
                     checked={allSelectCheckbox}
                   />
+                  <label
+                    className="all-select-label"
+                    htmlFor="allSelectCheckbox"
+                  >
+                    Select/Deselect
+                  </label>
                   <h1 className="list-header-name">Name</h1>
                   <h1 className="list-header-email">Email</h1>
                   <h1 className="list-header-role">Role</h1>
