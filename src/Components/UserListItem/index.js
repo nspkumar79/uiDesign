@@ -5,7 +5,11 @@ import "./index.css";
 
 const UserListItem = (props) => {
   const { eachItem, deleteUser, editUser, checkboxChanged } = props;
-  const { name, email, role, id } = eachItem;
+  const { name, email, role, id, isChecked } = eachItem;
+
+  const listItemClassName = isChecked
+    ? "user-item-container-active"
+    : "user-item-container-inactive";
 
   const onEditClicked = () => {
     editUser(id);
@@ -16,17 +20,18 @@ const UserListItem = (props) => {
   };
 
   const onChangeCheckbox = (event) => {
-    checkboxChanged(id);
+    checkboxChanged(event);
   };
 
   return (
     <>
-      <li className="user-item-container">
+      <li className={listItemClassName}>
         <input
           value={id}
           type="checkbox"
           className="user-checkbox"
           onChange={onChangeCheckbox}
+          checked={isChecked}
         />
         <p className="user-name">{name}</p>
         <p className="user-email">{email}</p>
@@ -44,7 +49,6 @@ const UserListItem = (props) => {
           </button>
         </div>
       </li>
-      <hr className="h-line" />
     </>
   );
 };

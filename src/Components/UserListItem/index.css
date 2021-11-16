@@ -1,8 +1,19 @@
-.user-item-container {
+.user-item-container-inactive {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-family: "Roboto";
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-bottom: 7px;
+}
+.user-item-container-active {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Roboto";
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-bottom: 7px;
+  background-color: #bfbfbf;
 }
 .user-checkbox {
   margin-right: 20px;

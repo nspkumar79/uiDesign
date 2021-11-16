@@ -9,12 +9,21 @@ class App extends Component {
     usersList: [],
     activePage: 1,
     filteredUsersList: [],
-    selectedUsers: [],
+    activePageUsers: [],
+    allSelectCheckbox: false,
   };
 
   componentDidMount() {
     this.getUsers();
   }
+
+  renderUpdatedFetchedData = (data) => ({
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    role: data.role,
+    isChecked: false,
+  });
 
   getUsers = async () => {
     const apiUrl =
@@ -22,39 +31,18 @@ class App extends Component {
     const response = await fetch(apiUrl);
     if (response.ok) {
       const fetchedData = await response.json();
-      console.log(fetchedData);
-      this.setState({ usersList: fetchedData, filteredUsersList: fetchedData });
+      const updatedFetchedData = fetchedData.map((eachItem) =>
+        this.renderUpdatedFetchedData(eachItem)
+      );
+      this.setState({
+        usersList: updatedFetchedData,
+        filteredUsersList: updatedFetchedData,
+        activePageUsers: updatedFetchedData.slice(0, 10),
+      });
     }
   };
 
-  onFirstPageClicked = () => {
-    this.setState({ activePage: 1 });
-  };
-
-  onPreviousPageClicked = () => {
-    const { activePage } = this.state;
-    if (activePage > 1) {
-      this.setState((prev) => ({ activePage: prev.activePage - 1 }));
-    }
-  };
-
-  onNextPageClicked = () => {
-    const { activePage, filteredUsersList } = this.state;
-    const usersListCount = filteredUsersList.length;
-    const upperPaginationNumber = Math.ceil(usersListCount / 10);
-    if (activePage < upperPaginationNumber) {
-      this.setState((prev) => ({ activePage: prev.activePage + 1 }));
-    }
-  };
-
-  onLastPageClicked = () => {
-    const { filteredUsersList } = this.state;
-    const usersListCount = filteredUsersList.length;
-    const upperPaginationNumber = Math.ceil(usersListCount / 10);
-    this.setState({ activePage: upperPaginationNumber });
-  };
-
-  renderRequiredUserList = () => {
+  updateActivePageUsers = () => {
     const { activePage, filteredUsersList } = this.state;
     const lowerIndex = (activePage - 1) * 10;
     const upperIndex = activePage * 10;
@@ -63,8 +51,43 @@ class App extends Component {
       lowerIndex,
       upperIndex
     );
+    this.setState({ activePageUsers: updatedFilteredUserList });
+  };
 
-    return updatedFilteredUserList;
+  onFirstPageClicked = () => {
+    this.setState({ activePage: 1 }, this.updateActivePageUsers);
+  };
+
+  onPreviousPageClicked = () => {
+    const { activePage } = this.state;
+    if (activePage > 1) {
+      this.setState(
+        (prev) => ({ activePage: prev.activePage - 1 }),
+        this.updateActivePageUsers
+      );
+    }
+  };
+
+  onNextPageClicked = () => {
+    const { activePage, filteredUsersList } = this.state;
+    const usersListCount = filteredUsersList.length;
+    const upperPaginationNumber = Math.ceil(usersListCount / 10);
+    if (activePage < upperPaginationNumber) {
+      this.setState(
+        (prev) => ({ activePage: prev.activePage + 1 }),
+        this.updateActivePageUsers
+      );
+    }
+  };
+
+  onLastPageClicked = () => {
+    const { filteredUsersList } = this.state;
+    const usersListCount = filteredUsersList.length;
+    const upperPaginationNumber = Math.ceil(usersListCount / 10);
+    this.setState(
+      { activePage: upperPaginationNumber },
+      this.updateActivePageUsers
+    );
   };
 
   onChangeSearchInput = (event) => {
@@ -76,44 +99,74 @@ class App extends Component {
         user.email.toLowerCase().includes(searchInput.toLowerCase()) ||
         user.role.toLowerCase().includes(searchInput.toLowerCase())
     );
-    this.setState({ filteredUsersList: filteredUsersList, activePage: 1 });
+    this.setState(
+      {
+        filteredUsersList: filteredUsersList,
+        activePage: 1,
+      },
+      this.updateActivePageUsers
+    );
   };
 
-  allCheckboxChanged = () => {};
+  allCheckboxChanged = (event) => {
+    const { activePageUsers } = this.state;
+    activePageUsers.forEach((user) => (user.isChecked = event.target.checked));
+    this.setState({
+      activePageUsers: activePageUsers,
+      allSelectCheckbox: event.target.checked,
+    });
+  };
 
-  checkboxChanged = (id) => {
-    const { selectedUsers } = this.state;
-    if (selectedUsers.includes(id)) {
-      const updatedSelectedUsers = selectedUsers.filter((item) => item !== id);
-      this.setState({ selectedUsers: updatedSelectedUsers });
-    } else {
-      selectedUsers.push(id);
-      this.setState({ selectedUsers: selectedUsers });
-    }
+  checkboxChanged = (event) => {
+    const { activePageUsers } = this.state;
+    activePageUsers.forEach((user) =>
+      user.id === event.target.value
+        ? (user.isChecked = event.target.checked)
+        : null
+    );
+    this.setState({
+      activePageUsers: activePageUsers,
+    });
   };
 
   deleteUser = (id) => {
-    const { filteredUsersList } = this.state;
+    const { usersList, filteredUsersList } = this.state;
     const updatedFilteredUsersList = filteredUsersList.filter(
       (user) => user.id !== id
     );
-    this.setState({ filteredUsersList: updatedFilteredUsersList });
+    const updatedUsersList = usersList.filter((user) => user.id !== id);
+    this.setState(
+      {
+        usersList: updatedUsersList,
+        filteredUsersList: updatedFilteredUsersList,
+      },
+      this.updateActivePageUsers
+    );
   };
 
   onDeleteSelected = () => {
-    const { selectedUsers, filteredUsersList } = this.state;
-    console.log(selectedUsers);
+    const { usersList, filteredUsersList } = this.state;
     const updatedFilteredUsersList = filteredUsersList.filter(
-      (user) => !selectedUsers.includes(user.id)
+      (user) => user.isChecked === false
     );
-    this.setState({ filteredUsersList: updatedFilteredUsersList });
+    const updatedUsersList = usersList.filter(
+      (user) => user.isChecked === false
+    );
+    this.setState(
+      (prev) => ({
+        allSelectCheckbox: prev.allSelectCheckbox ? false : false,
+        usersList: updatedUsersList,
+        filteredUsersList: updatedFilteredUsersList,
+      }),
+      this.updateActivePageUsers
+    );
   };
 
   editUser = (id) => {};
 
   render() {
-    const { activePage } = this.state;
-    const requiredUserList = this.renderRequiredUserList();
+    const { activePage, activePageUsers, allSelectCheckbox } = this.state;
+
     return (
       <div className="App">
         <div className="app-responsive-container">
@@ -123,71 +176,79 @@ class App extends Component {
             placeholder="Search by name, email or role"
             onChange={this.onChangeSearchInput}
           />
-          <ul className="users-list-container">
-            <li className="list-header-container">
-              <input
-                type="checkbox"
-                className="list-header-checkbox"
-                onChange={this.allCheckboxChanged}
-              />
-              <h1 className="list-header-name">Name</h1>
-              <h1 className="list-header-email">Email</h1>
-              <h1 className="list-header-role">Role</h1>
-              <h1 className="list-header-actions">Actions</h1>
-            </li>
-            <hr className="h-line" />
-            {requiredUserList.map((eachItem) => (
-              <UserListItem
-                eachItem={eachItem}
-                key={eachItem.id}
-                deleteUser={this.deleteUser}
-                editUser={this.editUser}
-                checkboxChanged={this.checkboxChanged}
-              />
-            ))}
-            <div className="navigation-delete-container">
-              <div className="delete-select-button-container">
-                <button
-                  type="button"
-                  className="delete-select-button"
-                  onClick={this.onDeleteSelected}
-                >
-                  Delete Selected
-                </button>
+          {activePageUsers.length > 1 ? (
+            <>
+              <ul className="users-list-container">
+                <li className="list-header-container">
+                  <input
+                    type="checkbox"
+                    className="list-header-checkbox"
+                    onChange={this.allCheckboxChanged}
+                    checked={allSelectCheckbox}
+                  />
+                  <h1 className="list-header-name">Name</h1>
+                  <h1 className="list-header-email">Email</h1>
+                  <h1 className="list-header-role">Role</h1>
+                  <h1 className="list-header-actions">Actions</h1>
+                </li>
+                {activePageUsers.map((eachItem) => (
+                  <UserListItem
+                    eachItem={eachItem}
+                    key={eachItem.id}
+                    deleteUser={this.deleteUser}
+                    editUser={this.editUser}
+                    checkboxChanged={this.checkboxChanged}
+                  />
+                ))}
+              </ul>
+              <div className="navigation-delete-container">
+                <div className="delete-select-button-container">
+                  <button
+                    type="button"
+                    className="delete-select-button"
+                    onClick={this.onDeleteSelected}
+                  >
+                    Delete Selected
+                  </button>
+                </div>
+                <div className="navigation-container">
+                  <button
+                    type="button"
+                    className="first-page-button"
+                    onClick={this.onFirstPageClicked}
+                  >
+                    <FaAngleDoubleLeft className="first-page" />
+                  </button>
+                  <button
+                    type="button"
+                    className="previous-page-button"
+                    onClick={this.onPreviousPageClicked}
+                  >
+                    <MdNavigateBefore className="previous-page" />
+                  </button>
+                  <span className="active-page">{activePage}</span>
+                  <button
+                    type="button"
+                    className="next-page-button"
+                    onClick={this.onNextPageClicked}
+                  >
+                    <MdNavigateNext className="next-page" />
+                  </button>
+                  <button
+                    type="button"
+                    className="last-page-button"
+                    onClick={this.onLastPageClicked}
+                  >
+                    <FaAngleDoubleRight className="last-page" />
+                  </button>
+                </div>
               </div>
-              <div className="navigation-container">
-                <button
-                  type="button"
-                  className="first-page-button"
-                  onClick={this.onFirstPageClicked}
-                >
-                  <FaAngleDoubleLeft className="first-page" />
-                </button>
-                <button
-                  type="button"
-                  className="previous-page-button"
-                  onClick={this.onPreviousPageClicked}
-                >
-                  <MdNavigateBefore className="previous-page" />
-                </button>
-                <span className="active-page">{activePage}</span>
-                <button
-                  type="button"
-                  className="next-page-button"
-                  onClick={this.onNextPageClicked}
-                >
-                  <MdNavigateNext className="next-page" />
-                </button>
-                <button
-                  type="button"
-                  className="last-page-button"
-                  onClick={this.onLastPageClicked}
-                >
-                  <FaAngleDoubleRight className="last-page" />
-                </button>
-              </div>
+            </>
+          ) : (
+            <div className="no-user-container">
+              <h1 className="no-user-text">No users Found</h1>
             </div>
-          </ul>
+          )}
         </div>
       </div>
     );
