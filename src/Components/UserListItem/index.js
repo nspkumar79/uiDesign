@@ -107,6 +107,7 @@ class UserListItem extends Component {
         ) : (
           <li className={listItemClassName}>
             <input
+              value={name}
               type="checkbox"
               className="user-checkbox"
               onChange={this.onChangeCheckbox}

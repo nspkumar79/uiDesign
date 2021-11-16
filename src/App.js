@@ -120,7 +120,7 @@ class App extends Component {
   checkboxChanged = (event) => {
     const { activePageUsers } = this.state;
     activePageUsers.forEach((user) =>
-      user.id === event.target.value
+      user.name === event.target.value
         ? (user.isChecked = event.target.checked)
         : null
     );
