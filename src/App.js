@@ -188,96 +188,103 @@ class App extends Component {
     const { activePage, activePageUsers, allSelectCheckbox } = this.state;
 
     return (
-      <div className="App">
-        <div className="app-responsive-container">
-          <input
-            type="search"
-            className="search-bar"
-            placeholder="Search by name, email or role"
-            onChange={this.onChangeSearchInput}
-          />
-          {activePageUsers.length > 0 ? (
-            <>
-              <ul className="users-list-container">
-                <li className="list-header-container">
-                  <input
-                    type="checkbox"
-                    id="allSelectCheckbox"
-                    className="list-header-checkbox"
-                    onChange={this.allCheckboxChanged}
-                    checked={allSelectCheckbox}
-                  />
-                  <label
-                    className="all-select-label"
-                    htmlFor="allSelectCheckbox"
-                  >
-                    Select/Deselect
-                  </label>
-                  <h1 className="list-header-name">Name</h1>
-                  <h1 className="list-header-email">Email</h1>
-                  <h1 className="list-header-role">Role</h1>
-                  <h1 className="list-header-actions">Actions</h1>
-                </li>
-                {activePageUsers.map((eachItem) => (
-                  <UserListItem
-                    eachItem={eachItem}
-                    key={eachItem.id}
-                    deleteUser={this.deleteUser}
-                    editUser={this.editUser}
-                    checkboxChanged={this.checkboxChanged}
-                  />
-                ))}
-              </ul>
-              <div className="navigation-delete-container">
-                <div className="delete-select-button-container">
-                  <button
-                    type="button"
-                    className="delete-select-button"
-                    onClick={this.onDeleteSelected}
-                  >
-                    Delete Selected
-                  </button>
+      <>
+        <div className="App">
+          <div className="app-responsive-container">
+            <input
+              type="search"
+              className="search-bar"
+              placeholder="Search by name, email or role"
+              onChange={this.onChangeSearchInput}
+            />
+            {activePageUsers.length > 0 ? (
+              <>
+                <ul className="users-list-container">
+                  <li className="list-header-container">
+                    <input
+                      type="checkbox"
+                      id="allSelectCheckbox"
+                      className="list-header-checkbox"
+                      onChange={this.allCheckboxChanged}
+                      checked={allSelectCheckbox}
+                    />
+                    <label
+                      className="all-select-label"
+                      htmlFor="allSelectCheckbox"
+                    >
+                      Select/Deselect
+                    </label>
+                    <h1 className="list-header-name">Name</h1>
+                    <h1 className="list-header-email">Email</h1>
+                    <h1 className="list-header-role">Role</h1>
+                    <h1 className="list-header-actions">Actions</h1>
+                  </li>
+                  {activePageUsers.map((eachItem) => (
+                    <UserListItem
+                      eachItem={eachItem}
+                      key={eachItem.id}
+                      deleteUser={this.deleteUser}
+                      editUser={this.editUser}
+                      checkboxChanged={this.checkboxChanged}
+                    />
+                  ))}
+                </ul>
+                <div className="navigation-delete-container">
+                  <div className="delete-select-button-container">
+                    <button
+                      type="button"
+                      className="delete-select-button"
+                      onClick={this.onDeleteSelected}
+                    >
+                      Delete Selected
+                    </button>
+                  </div>
+                  <div className="navigation-container">
+                    <button
+                      type="button"
+                      className="first-page-button"
+                      onClick={this.onFirstPageClicked}
+                    >
+                      <FaAngleDoubleLeft className="first-page" />
+                    </button>
+                    <button
+                      type="button"
+                      className="previous-page-button"
+                      onClick={this.onPreviousPageClicked}
+                    >
+                      <MdNavigateBefore className="previous-page" />
+                    </button>
+                    <span className="active-page">{activePage}</span>
+                    <button
+                      type="button"
+                      className="next-page-button"
+                      onClick={this.onNextPageClicked}
+                    >
+                      <MdNavigateNext className="next-page" />
+                    </button>
+                    <button
+                      type="button"
+                      className="last-page-button"
+                      onClick={this.onLastPageClicked}
+                    >
+                      <FaAngleDoubleRight className="last-page" />
+                    </button>
+                  </div>
                 </div>
-                <div className="navigation-container">
-                  <button
-                    type="button"
-                    className="first-page-button"
-                    onClick={this.onFirstPageClicked}
-                  >
-                    <FaAngleDoubleLeft className="first-page" />
-                  </button>
-                  <button
-                    type="button"
-                    className="previous-page-button"
-                    onClick={this.onPreviousPageClicked}
-                  >
-                    <MdNavigateBefore className="previous-page" />
-                  </button>
-                  <span className="active-page">{activePage}</span>
-                  <button
-                    type="button"
-                    className="next-page-button"
-                    onClick={this.onNextPageClicked}
-                  >
-                    <MdNavigateNext className="next-page" />
-                  </button>
-                  <button
-                    type="button"
-                    className="last-page-button"
-                    onClick={this.onLastPageClicked}
-                  >
-                    <FaAngleDoubleRight className="last-page" />
-                  </button>
-                </div>
+              </>
+            ) : (
+              <div className="no-user-container">
+                <h1 className="no-user-text">No users Found</h1>
               </div>
-            </>
-          ) : (
-            <div className="no-user-container">
-              <h1 className="no-user-text">No users Found</h1>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+        <div className="mobile-view">
+          <h1 className="mobile-view-text">
+            The View is not Supported. View it on Desktop
+          </h1>
+        </div>
+      </>
     );
   }
 }

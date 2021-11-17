@@ -1,9 +1,33 @@
-.App {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 30px;
-  padding-bottom: 30px;
+@media screen and (max-width: 800px) {
+  .App {
+    display: none;
+  }
+  .mobile-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+@media screen and (min-width: 800px) {
+  .App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  .mobile-view {
+    display: none;
+  }
+}
+.mobile-view-text {
+  font-size: 25px;
+  color: #e65137;
+  font-family: "Roboto";
+  text-align: center;
 }
 .app-responsive-container {
   width: 80%;
